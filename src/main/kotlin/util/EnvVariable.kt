@@ -5,7 +5,7 @@ object EnvVariable {
 
     fun getVariable(key: String): String? = env[key]
 
-    fun getMongoDatabase(): String = getVariable("mongo.database") ?: "test"
+    fun getMongoDatabase(): String = getVariable("mongo_database") ?: "test"
 
     fun doesExists(key: String): Boolean = env[key] != null
 }

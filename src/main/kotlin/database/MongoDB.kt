@@ -10,7 +10,7 @@ object MongoDB {
     private val connection = getConnection()
 
     private fun getConnection(): MongoClient? {
-        val connectionString = EnvVariable.getVariable("mongo.uri") ?: return null
+        val connectionString = EnvVariable.getVariable("mongo_uri") ?: return null
         return KMongo.createClient(ConnectionString(connectionString))
     }
 

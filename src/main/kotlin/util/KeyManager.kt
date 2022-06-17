@@ -7,8 +7,8 @@ import javax.crypto.spec.IvParameterSpec
 
 class KeyManager {
     companion object {
-        val defaultKey = EnvVariable.getVariable("aes.key") ?: ""
-        val defaultIv = EnvVariable.getVariable("aes.iv") ?: ""
+        val defaultKey = EnvVariable.getVariable("aes_key") ?: ""
+        val defaultIv = EnvVariable.getVariable("aes_iv") ?: ""
         val tokenKey = generateAESKey(128)
         val tokenIv = generateAESIv(128)
 

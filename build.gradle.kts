@@ -51,6 +51,10 @@ task("stage") {
     dependsOn.add("build")
 }
 
+springBoot {
+    mainClass.set("emiyaj.ApplicationKt")
+}
+
 configurations.forEach {
     if (it.name.contains("productionRuntimeClasspath")) {
         it.attributes.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage::class.java, "java-runtime"))
