@@ -15,8 +15,21 @@ import org.springframework.stereotype.Component
 import java.net.URL
 import javax.annotation.PostConstruct
 
+/**
+ * This object represents an updater for the EmiyaJ application.
+ * It provides methods to update the clothes data from a remote JSON source.
+ */
 @Component
 object Updater {
+    /**
+     * This method is called after the Spring application context is initialized.
+     * It checks if the application is running in debug mode and updates the clothes data if not.
+     *
+     * Example usage:
+     * ```kotlin
+     * Updater.update()
+     * ```
+     */
     @PostConstruct
     fun update() {
         val isDebug = EnvVariable.getVariable("DEBUG")
@@ -43,6 +56,15 @@ object Updater {
         }
     }
 
+    /**
+     * This method is used to shut down the server.
+     * It prints an error message and exits the application with a status code of 1.
+     *
+     * Example usage:
+     * ```kotlin
+     * Updater.shutdown()
+     * ```
+     */
     private fun shutdown() {
         println("Error! Shutting down server...")
         System.exit(1)
