@@ -4,6 +4,33 @@ import com.beust.klaxon.Json
 import emiyaj.clothes.*
 import kotlinx.serialization.Serializable
 
+/**
+ * This data class represents the JSON structure of a clothing item in the remote JSON.
+ * Each property corresponds to a specific attribute of the clothing item.
+ *
+ * @property sourceSheet The source sheet from where the clothing item details are fetched, can be null.
+ * @property name The name of the clothing item.
+ * @property closetImage The image of the clothing item in the closet, can be null.
+ * @property storageImage The image of the clothing item in the storage, can be null.
+ * @property variation The variation of the clothing item, can be null.
+ * @property size The size of the clothing item, can be null.
+ * @property diy A boolean indicating whether the clothing item is a DIY item.
+ * @property buy The buying price of the clothing item, can be null.
+ * @property sell The selling price of the clothing item, can be null.
+ * @property colors The list of colors of the clothing item.
+ * @property styles The list of styles of the clothing item.
+ * @property theme The list of themes of the clothing item.
+ * @property hhaBasePoints The base points of the clothing item in the Happy Home Academy.
+ * @property seasonality The seasonality of the clothing item, can be null.
+ * @property translations The translations of the clothing item.
+ * @property mannequinSeason The season of the mannequin, can be null.
+ * @property source The list of sources of the clothing item, can be null.
+ * @property variations The list of variations of the clothing item, can be null.
+ * @property exchangePrice The exchange price of the clothing item, can be null.
+ * @property filename The filename of the clothing item, can be null.
+ * @property internalID The internal ID of the clothing item, can be null.
+ * @property uniqueEntryID The unique entry ID of the clothing item, can be null.
+ */
 @Serializable
 data class ClothesJson (
     val sourceSheet: String? = null,
