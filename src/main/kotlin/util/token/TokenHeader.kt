@@ -1,10 +1,10 @@
 package emiyaj.util.token
 
 /**
- * This data class represents the header of a token in the application.
- * It includes the algorithm used for the token. The default algorithm is "AES256".
+ * 이 데이터 클래스는 애플리케이션의 토큰 헤더를 나타냅니다.
+ * 토큰에 사용된 알고리즘을 포함합니다. 기본 알고리즘은 "AES256"입니다.
  *
- * @property algorithm The algorithm used for the token. Default is "AES256".
+ * @property algorithm 토큰에 사용된 알고리즘입니다. 기본값은 "AES256"입니다.
  */
 data class TokenHeader (
         val algorithm: String = "AES256"

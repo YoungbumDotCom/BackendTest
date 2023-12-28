@@ -1,16 +1,16 @@
 package emiyaj.util.token
 
 /**
- * This data class represents a token in the application.
- * It includes the token header, the entity for which the token was issued, the token string itself,
- * and timestamps for the token's expiration, creation, and cleanup times.
+ * 이 데이터 클래스는 애플리케이션의 토큰을 나타냅니다.
+ * 토큰 헤더, 토큰이 발행된 엔티티, 토큰 문자열 자체,
+ * 그리고 토큰의 만료, 생성, 정리 시간에 대한 타임스탬프를 포함합니다.
  *
- * @property header The header of the token, represented by a TokenHeader object.
- * @property issuedFor The entity for which the token was issued. This could be a user ID, username, etc.
- * @property token The token string itself. This is typically a Base64 encoded string.
- * @property expireTime The expiration time of the token, represented as a Unix timestamp.
- * @property createdTime The creation time of the token, represented as a Unix timestamp.
- * @property cleanTime The cleanup time of the token, represented as a Unix timestamp. This is typically the time at which the token should be removed from memory or a database.
+ * @property header 토큰의 헤더로, TokenHeader 객체로 표현됩니다.
+ * @property issuedFor 토큰이 발행된 엔티티입니다. 이는 사용자 ID, 사용자 이름 등이 될 수 있습니다.
+ * @property token 토큰 문자열 자체입니다. 이는 일반적으로 Base64로 인코딩된 문자열입니다.
+ * @property expireTime 토큰의 만료 시간으로, Unix 타임스탬프로 표현됩니다.
+ * @property createdTime 토큰의 생성 시간으로, Unix 타임스탬프로 표현됩니다.
+ * @property cleanTime 토큰의 정리 시간으로, Unix 타임스탬프로 표현됩니다. 이는 일반적으로 토큰이 메모리나 데이터베이스에서 제거되어야 하는 시간입니다.
  */
 data class Token (
         val header: TokenHeader,

@@ -1,34 +1,34 @@
 package emiyaj.util
 
 /**
- * This object provides utility functions for managing environment variables.
- * It retrieves the environment variables from the System.getenv() function and stores them in a private map.
+ * 이 객체는 환경 변수를 관리하기 위한 유틸리티 함수를 제공합니다.
+ * System.getenv() 함수에서 환경 변수를 검색하고 이를 개인 맵에 저장합니다.
  */
 object EnvVariable {
-    // Map of environment variables
+    // 환경 변수의 맵
     private val env: Map<String, String> = System.getenv()
 
     /**
-     * This function retrieves the value of an environment variable given its key.
+     * 이 함수는 주어진 키의 환경 변수 값을 검색합니다.
      *
-     * @param key The key of the environment variable.
-     * @return The value of the environment variable, or null if it does not exist.
+     * @param key 환경 변수의 키입니다.
+     * @return 환경 변수의 값, 또는 존재하지 않는 경우 null을 반환합니다.
      */
     fun getVariable(key: String): String? = env[key]
 
     /**
-     * This function retrieves the value of the "mongo_database" environment variable.
-     * If the variable does not exist, it returns "test" as a default value.
+     * 이 함수는 "mongo_database" 환경 변수의 값을 검색합니다.
+     * 변수가 존재하지 않는 경우 기본값으로 "test"를 반환합니다.
      *
-     * @return The value of the "mongo_database" environment variable, or "test" if it does not exist.
+     * @return "mongo_database" 환경 변수의 값, 또는 존재하지 않는 경우 "test"를 반환합니다.
      */
     fun getMongoDatabase(): String = getVariable("mongo_database") ?: "test"
 
     /**
-     * This function checks if an environment variable exists given its key.
+     * 이 함수는 주어진 키의 환경 변수가 존재하는지 확인합니다.
      *
-     * @param key The key of the environment variable.
-     * @return True if the environment variable exists, false otherwise.
+     * @param key 환경 변수의 키입니다.
+     * @return 환경 변수가 존재하면 true, 그렇지 않으면 false를 반환합니다.
      */
     fun doesExists(key: String): Boolean = env[key] != null
 }

@@ -4,28 +4,29 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
 /**
- * This class provides a utility for hashing a string using the PBKDF2 with Hmac SHA256 algorithm.
+ * 이 클래스는 PBKDF2와 Hmac SHA256 알고리즘을 사용하여 문자열을 해싱하는 유틸리티를 제공합니다.
  */
 class PBKDF2 {
     companion object {
-        // Number of iterations for the PBKDF2 algorithm
+        // PBKDF2 알고리즘의 반복 횟수
         private const val iterations = 25000
-        // Length of the generated key
+        // 생성된 키의 길이
         private const val keyLength = 512 * 8
 
         /**
-         * This function converts a ByteArray to a hexadecimal string.
+         * 이 함수는 ByteArray를 16진수 문자열로 변환합니다.
          *
-         * @return The hexadecimal string representation of the ByteArray.
+         * @return ByteArray의 16진수 문자열 표현.
          */
         private fun ByteArray.toHexString() = joinToString("") { "%02x".format(it) }
 
         /**
-         * This function hashes a raw string using a salt string with the PBKDF2 with Hmac SHA256 algorithm.
+         * 이 함수는 PBKDF2와 Hmac SHA256 알고리즘을 사용하여 원시 문자열을 해싱하고,
+         * 해싱 과정에서 솔트 문자열을 사용합니다.
          *
-         * @param raw The raw string to be hashed.
-         * @param salt The salt string to be used in the hashing process.
-         * @return The hashed string in hexadecimal format.
+         * @param raw 해싱할 원시 문자열입니다.
+         * @param salt 해싱 과정에서 사용할 솔트 문자열입니다.
+         * @return 16진수 형식의 해싱된 문자열을 반환합니다.
          */
         fun hash(raw: String, salt: String): String {
             val skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")

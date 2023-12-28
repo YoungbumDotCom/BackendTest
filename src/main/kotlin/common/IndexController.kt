@@ -4,26 +4,26 @@ import emiyaj.user.UserDatabase
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 /**
- * This class handles HTTP requests to the root ("/") and error ("/error") paths.
- * It is annotated with @RestController, indicating that it is a Spring MVC controller that returns data directly in the response body.
- * It is also annotated with @RequestMapping at the class level, specifying that all methods in this class handle requests to the "/" path.
- * It implements the ErrorController interface to handle errors.
+ * 이 클래스는 루트("/") 및 오류("/error") 경로에 대한 HTTP 요청을 처리합니다.
+ * @RestController 어노테이션이 붙어 있어, 이것이 응답 본문에 직접 데이터를 반환하는 Spring MVC 컨트롤러임을 나타냅니다.
+ * 또한 클래스 수준에서 @RequestMapping 어노테이션이 붙어 있어, 이 클래스의 모든 메서드가 "/" 경로에 대한 요청을 처리함을 나타냅니다.
+ * 오류를 처리하기 위해 ErrorController 인터페이스를 구현합니다.
  */
 @RestController
 @RequestMapping(value = ["/"])
 class IndexController : ErrorController {
-    // The path to the error page
+    // 오류 페이지로의 경로
     private val path = "/error"
 
     /**
-     * This function handles requests to the "/error" path.
-     * It returns a CommonResult with an INTERNAL_ERROR status and a comment of "Internal Server Error."
+     * 이 함수는 "/error" 경로에 대한 요청을 처리합니다.
+     * INTERNAL_ERROR 상태와 "Internal Server Error."라는 코멘트를 가진 CommonResult를 반환합니다.
      *
-     * @param req The HttpServletRequest object associated with the incoming request.
-     * @return A CommonResult object with an INTERNAL_ERROR status and a comment of "Internal Server Error."
+     * @param req 들어오는 요청과 연관된 HttpServletRequest 객체입니다.
+     * @return INTERNAL_ERROR 상태와 "Internal Server Error."라는 코멘트를 가진 CommonResult 객체를 반환합니다.
      */
     @RequestMapping(value = ["/error"])
     fun error(req: HttpServletRequest): CommonResult {
@@ -32,10 +32,10 @@ class IndexController : ErrorController {
     }
 
     /**
-     * This function handles requests to the "/" path.
-     * It returns a CommonResult with a NORMAL status and a comment of "normal".
+     * 이 함수는 "/" 경로에 대한 요청을 처리합니다.
+     * NORMAL 상태와 "normal"이라는 코멘트를 가진 CommonResult를 반환합니다.
      *
-     * @return A CommonResult object with a NORMAL status and a comment of "normal".
+     * @return NORMAL 상태와 "normal"이라는 코멘트를 가진 CommonResult 객체를 반환합니다.
      */
     @RequestMapping(value = ["/"])
     fun index(): CommonResult {
@@ -43,10 +43,10 @@ class IndexController : ErrorController {
     }
 
     /**
-     * This function migrates all users' villagers from a list to a map with a default group.
-     * It is currently commented out.
+     * 이 함수는 모든 사용자의 주민들을 기본 그룹을 가진 맵으로 마이그레이션합니다.
+     * 현재는 주석 처리되어 있습니다.
      *
-     * @return A list of all users.
+     * @return 모든 사용자의 목록을 반환합니다.
      */
     /*@RequestMapping(value = ["/migrate"])
     fun migrate(): List<Any> {

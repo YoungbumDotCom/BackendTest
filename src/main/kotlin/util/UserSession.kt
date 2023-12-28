@@ -3,25 +3,25 @@ package emiyaj.util
 import emiyaj.user.model.User
 
 /**
- * This object represents a user session in the EmiyaJ application.
- * It provides methods to authenticate, create, destroy, and manage user sessions.
+ * 이 객체는 EmiyaJ 애플리케이션에서 사용자 세션을 나타냅니다.
+ * 사용자를 인증하고, 세션을 생성하고, 파괴하고, 관리하는 메서드를 제공합니다.
  */
 object UserSession {
-    // A mutable map to store the user sessions. The key is the session token and the value is the User object.
+    // 사용자 세션을 저장하기 위한 가변 맵입니다. 키는 세션 토큰이고 값은 User 객체입니다.
     private val session: MutableMap<String, User> = mutableMapOf()
 
     /**
-     * This method is used to authenticate a user based on the provided session token.
-     * @param token The session token of the user.
-     * @return The User object if the session token is valid, null otherwise.
+     * 이 메서드는 제공된 세션 토큰을 기반으로 사용자를 인증하는 데 사용됩니다.
+     * @param token 사용자의 세션 토큰입니다.
+     * @return 세션 토큰이 유효하면 User 객체를 반환하고, 그렇지 않으면 null을 반환합니다.
      */
     fun authenticate(token: String): User? = session[token]
 
     /**
-     * This method is used to create a new user session.
-     * It generates a random session token, stores the User object in the session map, and returns the session token.
-     * @param user The User object.
-     * @return The session token.
+     * 이 메서드는 새로운 사용자 세션을 생성하는 데 사용됩니다.
+     * 무작위 세션 토큰을 생성하고, User 객체를 세션 맵에 저장하고, 세션 토큰을 반환합니다.
+     * @param user User 객체입니다.
+     * @return 세션 토큰입니다.
      */
     fun createSession(user: User): String {
         val token = generateRandomString()
@@ -30,9 +30,9 @@ object UserSession {
     }
 
     /**
-     * This method is used to destroy a user session.
-     * It finds the session token associated with the User object and removes it from the session map.
-     * @param user The User object.
+     * 이 메서드는 사용자 세션을 파괴하는 데 사용됩니다.
+     * User 객체와 연관된 세션 토큰을 찾아 세션 맵에서 제거합니다.
+     * @param user User 객체입니다.
      */
     fun destroySession(user: User) {
         val tokens = session.filterValues { it == user }.keys
@@ -45,18 +45,18 @@ object UserSession {
     }
 
     /**
-     * This method is used to destroy all user sessions.
-     * It clears the session map.
+     * 이 메서드는 모든 사용자 세션을 파괴하는 데 사용됩니다.
+     * 세션 맵을 지웁니다.
      */
     fun destroyAll() {
         session.clear()
     }
 
     /**
-     * This method is used to generate a random string of a specified length.
-     * It's used internally to generate session tokens.
-     * @param length The length of the random string. The default value is 35.
-     * @return The generated random string.
+     * 이 메서드는 지정된 길이의 무작위 문자열을 생성하는 데 사용됩니다.
+     * 내부적으로 세션 토큰을 생성하는 데 사용됩니다.
+     * @param length 무작위 문자열의 길이입니다. 기본값은 35입니다.
+     * @return 생성된 무작위 문자열입니다.
      */
     private fun generateRandomString(length: Int = 35): String {
         val chars = ('A'..'Z') + ('a'..'z') + (0..9)
