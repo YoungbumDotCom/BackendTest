@@ -93,6 +93,16 @@ object UserSessionNew {
         }
     }
 
+    fun invalidate(encryptedToken: String) {
+        val decrypted = encryption.decrypt(encryptedToken)
+        val tokenBody = try {
+            Json.decodeFromString<Token>(decrypted)
+        } catch (e: Exception) {
+            return
+        }
+        sessions.remove(tokenBody)
+    }
+
     /**
      * Generate random string for a new token string.
      *
