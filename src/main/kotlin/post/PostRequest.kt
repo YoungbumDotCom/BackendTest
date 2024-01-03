@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 
 data class PostRequest @JsonCreator constructor(
-    @JsonProperty val image: Int,
+    @JsonProperty val image: String,
     @JsonProperty val content: String,
 )

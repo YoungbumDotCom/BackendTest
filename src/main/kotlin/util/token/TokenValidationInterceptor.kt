@@ -31,7 +31,7 @@ class TokenValidationInterceptor : HandlerInterceptor {
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         // 환경 변수 "env"가 "debug"로 설정되어 있으면 사용자 속성을 강제 설정하고 true를 반환합니다.
         if (EnvVariable.getVariable("env") == "debug") {
-            request.setAttribute("user", UserDatabase.getUserByEmail("email@example.com"))
+            request.setAttribute("user", UserDatabase.getUserByEmail("admin@admin.com"))
             return true
         }
         // 요청 메서드가 OPTIONS인 경우 true를 반환합니다.

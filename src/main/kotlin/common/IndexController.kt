@@ -1,10 +1,14 @@
 package emiyaj.common
 
 import emiyaj.user.UserDatabase
+import emiyaj.util.ImageStorage
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 
 /**
  * 이 클래스는 루트("/") 및 오류("/error") 경로에 대한 HTTP 요청을 처리합니다.
@@ -42,21 +46,10 @@ class IndexController : ErrorController {
         return CommonResult(status = CommonStatus.NORMAL, comment = "normal")
     }
 
-    /**
-     * 이 함수는 모든 사용자의 주민들을 기본 그룹을 가진 맵으로 마이그레이션합니다.
-     * 현재는 주석 처리되어 있습니다.
-     *
-     * @return 모든 사용자의 목록을 반환합니다.
-     */
-    /*@RequestMapping(value = ["/migrate"])
-    fun migrate(): List<Any> {
-        val users = UserDatabase.getAllUsers()
-        for (user in users) {
-            UserDatabase.migrateMyVillagers(user.username)
-            println(user.username)
-        }
-        return users
-    }*/
+    @GetMapping(value = ["/image/{key}"])
+    fun getImage(@PathVariable key: String, response: HttpServletResponse) {
+        val image = ImageStorage.getImage(key)
+        image?.copyTo(response.outputStream)
+    }
 
-    //fun getErrorPath(): String = path
 }

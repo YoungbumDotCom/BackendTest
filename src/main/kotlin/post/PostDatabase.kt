@@ -3,9 +3,22 @@ package emiyaj.comment
 import emiyaj.comment.model.Post
 import emiyaj.database.MySQL
 import emiyaj.util.ImageStorage
-import java.io.InputStream
+import kotlinx.datetime.LocalDateTime
+import java.sql.ResultSet
+import java.sql.Statement
+import java.sql.Timestamp
 
 object PostDatabase {
+    private fun parseResultSetToPost(resultSet: ResultSet): Post {
+        val regDate = resultSet.getTimestamp("reg_date").toLocalDateTime()
+        return Post(
+            resultSet.getInt("id"),
+            resultSet.getInt("member_id"),
+            resultSet.getString("content"),
+            "image/" + resultSet.getString("image"),
+            LocalDateTime(regDate.year, regDate.month, regDate.dayOfMonth, regDate.hour, regDate.minute, regDate.second)
+        )
+    }
     /**
      * 이 함수는 데이터베이스에서 주어진 개수만큼의 최신 게시물을 검색합니다.
      * MySQL 데이터베이스에 연결하고, 게시물의 개수를 사용하여 SELECT SQL 문을 준비합니다.
@@ -21,18 +34,8 @@ object PostDatabase {
         statement?.setInt(1, count)
         val resultSet = statement?.executeQuery()
         val posts = mutableListOf<Post>()
-        if (resultSet != null) {
-            while (resultSet.next()) {
-                posts.add(
-                    Post(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("author"),
-                        resultSet.getString("content"),
-                        resultSet.getString("image"),
-                        resultSet.getLong("reg_date")
-                    )
-                )
-            }
+        while (resultSet?.next() == true) {
+           posts.add(parseResultSetToPost(resultSet))
         }
         resultSet?.close()
         statement?.close()
@@ -53,22 +56,12 @@ object PostDatabase {
     fun getPostsByRange(start: Int, end: Int): List<Post> {
         val connection = MySQL.getConnection()
         val statement = connection?.prepareStatement("SELECT * FROM post ORDER BY reg_date DESC LIMIT ?, ?")
-        statement?.setInt(1, start)
-        statement?.setInt(2, end)
+        statement?.setInt(1, start - 1)
+        statement?.setInt(2, end - 1)
         val resultSet = statement?.executeQuery()
         val posts = mutableListOf<Post>()
-        if (resultSet != null) {
-            while (resultSet.next()) {
-                posts.add(
-                    Post(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("author"),
-                        resultSet.getString("content"),
-                        resultSet.getString("image"),
-                        resultSet.getLong("reg_date")
-                    )
-                )
-            }
+        while (resultSet?.next() == true) {
+            posts.add(parseResultSetToPost(resultSet))
         }
         resultSet?.close()
         statement?.close()
@@ -91,18 +84,11 @@ object PostDatabase {
         statement?.setInt(1, id)
         val resultSet = statement?.executeQuery()
         resultSet?.next()
-        val post = if (resultSet != null) {
-            Post(
-                resultSet.getInt("id"),
-                resultSet.getInt("author"),
-                resultSet.getString("content"),
-                resultSet.getString("image"),
-                resultSet.getLong("reg_date")
-            )
+        val post = if (resultSet?.next() == true) {
+            parseResultSetToPost(resultSet)
         } else {
             null
         }
-
         resultSet?.close()
         statement?.close()
         connection?.close()
@@ -117,19 +103,25 @@ object PostDatabase {
      *
      * @param author 게시물의 작성자입니다. 이것은 게시물을 작성한 사용자의 ID를 나타냅니다.
      * @param content 게시물의 내용입니다. 이것은 게시물의 본문을 나타냅니다.
-     * @param imageKey 게시물의 이미지 키입니다. 이것은 게시물에 첨부된 이미지의 키를 나타냅니다.
+     * @param image Base64 인코딩된 이미지입니다. 이것은 게시물에 첨부된 이미지를 나타냅니다.
+     * @return 추가된 게시물의 ID를 반환합니다. 게시물을 추가하지 못한 경우 -1을 반환합니다.
      */
-    fun postToDatabase(author: Int, content: String, image: InputStream) {
-//        ImageStorage.uploadImage(author, image)
-//        val connection = MySQL.getConnection()
-//        val statement =
-//            connection?.prepareStatement("INSERT INTO post (author, content, image, reg_date) VALUES (?, ?, ?, ?)")
-//        statement?.setInt(1, author)
-//        statement?.setString(2, content)
-//        statement?.setString(3, imageKey)
-//        statement?.setLong(4, System.currentTimeMillis())
-//        statement?.executeUpdate()
-//        statement?.close()
-//        connection?.close()
+    fun postToDatabase(author: Int, content: String, image: String): Int {
+        val imageKey = ImageStorage.uploadImage(author, image)
+        val connection = MySQL.getConnection()
+        val statement =
+            connection?.prepareStatement("INSERT INTO post (member_id, content, image, reg_date) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)
+        statement?.setInt(1, author)
+        statement?.setString(2, content)
+        statement?.setString(3, imageKey)
+        statement?.setTimestamp(4, Timestamp(System.currentTimeMillis()))
+        statement?.executeUpdate()
+        val key = statement?.generatedKeys
+        key?.next()
+        val id = key?.getInt(1)
+        key?.close()
+        statement?.close()
+        connection?.close()
+        return id ?: -1
     }
 }
