@@ -1,13 +1,15 @@
 package emiyaj.user
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.serialization.Serializable
 
 /**
- * This data class represents a login request in the application.
- * It includes a data property which is the encrypted login data received in the request.
- * It also includes a decryptedData property which is the decrypted login data.
+ * 사용자 로그인 요청을 나타내는 데이터 클래스입니다.
  *
- * @property data The login data received in the request.
+ * @property email 사용자의 이메일 주소입니다.
+ * @property password 사용자의 비밀번호입니다.
  */
-data class LoginRequest @JsonCreator constructor(@JsonProperty val data: String)
+@Serializable
+data class LoginRequest (
+    val email: String,     // 사용자의 이메일 주소
+    val password: String   // 사용자의 비밀번호
+)

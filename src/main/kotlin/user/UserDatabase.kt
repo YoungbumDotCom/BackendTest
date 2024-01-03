@@ -3,6 +3,7 @@ package emiyaj.user
 import emiyaj.database.MySQL
 import emiyaj.user.model.User
 import java.sql.ResultSet
+import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -30,7 +31,7 @@ object UserDatabase {
             birth = rs.getString("birth"),
             name = rs.getString("name"),
             nickname = rs.getString("nickname"),
-            created = LocalDateTime.ofEpochSecond(rs.getLong("created"), 0, ZoneOffset.of("Asia/Seoul"))
+            created = rs.getTimestamp("created_date").toLocalDateTime()
         )
     }
 
@@ -45,7 +46,7 @@ object UserDatabase {
         val statement = connection?.createStatement()
         val resultSet = statement?.executeQuery("SELECT * FROM member")
         val users = mutableListOf<User>()
-        if (resultSet != null) {
+        if (resultSet?.next() == true) {
             users.add(parseUserFromResultSet(resultSet))
         }
         return users
@@ -63,8 +64,9 @@ object UserDatabase {
         val statement = connection?.prepareStatement("SELECT * FROM member WHERE email = ?")
         statement?.setString(1, email)
         val resultSet = statement?.executeQuery()
-
-        return resultSet?.let { parseUserFromResultSet(it) }
+        return if (resultSet?.next() == true) {
+            parseUserFromResultSet(resultSet)
+        } else null
     }
 
     /**
@@ -79,8 +81,9 @@ object UserDatabase {
         val statement = connection?.prepareStatement("SELECT * FROM member WHERE id = ?")
         statement?.setString(1, id)
         val resultSet = statement?.executeQuery()
-
-        return resultSet?.let { parseUserFromResultSet(it) }
+        return if (resultSet?.next() == true) {
+            parseUserFromResultSet(resultSet)
+        } else null
     }
 
     /**
@@ -97,8 +100,9 @@ object UserDatabase {
         statement?.setString(1, email)
         statement?.setString(2, passwordHash)
         val resultSet = statement?.executeQuery()
-
-        return resultSet?.let { parseUserFromResultSet(it) }
+        return if (resultSet?.next() == true) {
+             parseUserFromResultSet(resultSet)
+        } else null
     }
 
     /**
@@ -120,28 +124,35 @@ object UserDatabase {
      *
      * @param user 생성할 사용자 정보를 담고 있는 User 객체입니다.
      */
-    fun createUser(user: User) {
-        // MySQL 데이터베이스에 연결합니다.
-        val connection = MySQL.getConnection()
+    private fun createUser(user: User): User? {
+        try {
+            // MySQL 데이터베이스에 연결합니다.
+            val connection = MySQL.getConnection()
 
-        // 새로운 사용자를 생성하는 SQL 문을 준비합니다.
-        val statement =
-            connection?.prepareStatement("INSERT INTO member (password, email, modified, phone, text, verify, birth, name, nickname, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+            // 새로운 사용자를 생성하는 SQL 문을 준비합니다.
+            val statement =
+                connection?.prepareStatement("INSERT INTO member (password, email, modified, phone, text, verify, birth, name, nickname, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 
-        // SQL 문의 각 파라미터에 사용자 정보를 설정합니다.
-        statement?.setString(1, user.password)
-        statement?.setString(2, user.email)
-        statement?.setString(3, user.modified)
-        statement?.setString(4, user.phone)
-        statement?.setString(5, user.text)
-        statement?.setString(6, user.verify)
-        statement?.setString(7, user.birth)
-        statement?.setString(8, user.name)
-        statement?.setString(9, user.nickname)
-        statement?.setLong(10, user.created.toEpochSecond(ZoneOffset.of("Asia/Seoul")))
+            // SQL 문의 각 파라미터에 사용자 정보를 설정합니다.
+            statement?.setString(1, user.password)
+            statement?.setString(2, user.email)
+            statement?.setString(3, user.modified)
+            statement?.setString(4, user.phone)
+            statement?.setString(5, user.text)
+            statement?.setString(6, user.verify)
+            statement?.setString(7, user.birth)
+            statement?.setString(8, user.name)
+            statement?.setString(9, user.nickname)
+            statement?.setTimestamp(10, Timestamp(user.created.toEpochSecond(ZoneOffset.of("+09:00"))))
 
-        // SQL 문을 실행하여 사용자를 생성합니다.
-        statement?.executeUpdate()
+
+            // SQL 문을 실행하여 사용자를 생성합니다.
+            statement?.executeUpdate()
+            return user
+        } catch (e: Exception) {
+            // 사용자 생성에 실패한 경우, null을 반환합니다.
+            return null
+        }
     }
 
     /**
@@ -153,8 +164,8 @@ object UserDatabase {
      * @param name 생성할 사용자의 이름입니다.
      * @param nickname 생성할 사용자의 별명입니다.
      */
-    fun createUser(email: String, password: String, name: String, nickname: String) {
-        createUser(
+    fun createUser(email: String, password: String, name: String, nickname: String): User? {
+        return createUser(
             User(
                 id = 0,
                 password = password,

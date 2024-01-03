@@ -1,16 +1,12 @@
 package emiyaj.comment
 
-import com.beust.klaxon.Klaxon
-import emiyaj.common.CommonRequest
 import emiyaj.common.CommonResult
 import emiyaj.common.CommonStatus
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import jakarta.servlet.http.HttpServletRequest
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @RestController
 @RequestMapping(value = ["comment"])
@@ -29,7 +25,7 @@ class PostController {
         if (request.content.length < 4 || request.content.containsSpecial()) {
             return CommonResult(CommonStatus.NORMAL, "bad request")
         }
-        PostDatabase.postToDatabase(userId , request.content, request)
+//       TODO PostDatabase.postToDatabase(userId , request.content, request)
         return CommonResult(CommonStatus.NORMAL, "success")
     }
 

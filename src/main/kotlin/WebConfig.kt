@@ -1,6 +1,5 @@
 package emiyaj
 
-import emiyaj.database.MongoDB
 import jakarta.annotation.PreDestroy
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry
@@ -20,7 +19,7 @@ open class WebConfig : WebMvcConfigurer {
      * @param registry CORS 등록을 돕는 CorsRegistry의 인스턴스입니다.
      */
     override fun addCorsMappings(registry: CorsRegistry) {
-        registry.addMapping("/**").allowedOrigins("http://127.0.0.1:9999", "http://127.0.0.1:3000", "https://youngbum.com")
+        registry.addMapping("/**").allowedOrigins("http://127.0.0.1:9999", "http://localhost:3000", "https://youngbum.com")
     }
 
     /**

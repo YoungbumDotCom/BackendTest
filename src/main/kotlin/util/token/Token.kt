@@ -1,5 +1,7 @@
 package emiyaj.util.token
 
+import kotlinx.serialization.Serializable
+
 /**
  * 이 데이터 클래스는 애플리케이션의 토큰을 나타냅니다.
  * 토큰 헤더, 토큰이 발행된 엔티티, 토큰 문자열 자체,
@@ -12,6 +14,7 @@ package emiyaj.util.token
  * @property createdTime 토큰의 생성 시간으로, Unix 타임스탬프로 표현됩니다.
  * @property cleanTime 토큰의 정리 시간으로, Unix 타임스탬프로 표현됩니다. 이는 일반적으로 토큰이 메모리나 데이터베이스에서 제거되어야 하는 시간입니다.
  */
+@Serializable
 data class Token (
         val header: TokenHeader,
         val issuedFor: String,

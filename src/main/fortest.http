@@ -1,0 +1,18 @@
+POST http://localhost:8080/admin/login
+Content-Type: application/json
+
+{
+  "email": "admin@admin.com",
+  "password": "admin"
+}
+
+###
+POST http://localhost:8080/admin/register
+Content-Type: application/json
+
+{
+  "email": "admin@admin.com",
+  "password": "admin",
+  "name": "admin",
+  "nickname": "admin"
+}

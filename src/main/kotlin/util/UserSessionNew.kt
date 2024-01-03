@@ -1,10 +1,11 @@
 package emiyaj.util
 
-import com.beust.klaxon.Klaxon
 import emiyaj.user.model.User
 import emiyaj.user.UserStatus
 import emiyaj.util.token.Token
 import emiyaj.util.token.TokenHeader
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.util.*
 
 /**
@@ -18,6 +19,7 @@ object UserSessionNew {
     private const val expireMinutes = 3
     private const val cleanMinutes = 40
     private val sessions: MutableMap<Token, User> = mutableMapOf()
+    private val encryption = AESEncryption()
 
     /**
      * Create session using the User object
@@ -26,14 +28,19 @@ object UserSessionNew {
      * @return AES encrypted whole user token.
      */
     fun createSession(user: User): String {
+        if (sessions.containsValue(user)) {
+            val token = sessions.filter { it.value == user }.keys.first()
+            return encryption.encrypt(Json.encodeToString(token))
+        }
         val expireTime = Calendar.getInstance()
         val cleanTime = Calendar.getInstance()
         val now = Calendar.getInstance().timeInMillis
         expireTime.add(Calendar.MINUTE, expireMinutes)
         cleanTime.add(Calendar.MINUTE, cleanMinutes)
         val tokenValue = generateRandomString(32)
-        val tokenBody = Token(TokenHeader(), "dodo.ij.rs", tokenValue, expireTime.timeInMillis, now, cleanTime.timeInMillis)
-        val encryptedTokenBodyJson = AESEncryption.encrypt(Klaxon().toJsonString(tokenBody), KeyManager.tokenKey, KeyManager.tokenIv)
+        val tokenBody = Token(TokenHeader(), "test", tokenValue, expireTime.timeInMillis, now, cleanTime.timeInMillis)
+        val encryptedTokenBodyJson =
+            encryption.encrypt(Json.encodeToString(tokenBody))//Klaxon().toJsonString(tokenBody))
         sessions[tokenBody] = user
         return encryptedTokenBodyJson
     }
@@ -47,13 +54,31 @@ object UserSessionNew {
      * @see UserStatus For detail about UserStatus.
      */
     fun authenticate(encryptedToken: String, host: String?): Pair<UserStatus, User?> {
-        val decrypted = AESEncryption.decrypt(encryptedToken, KeyManager.tokenKey, KeyManager.tokenIv)
-        val tokenBody = Klaxon().parse<Token>(decrypted) ?: return Pair(UserStatus.INVALID, null)
+        // AES로 암호화된 토큰을 복호화합니다.
+        val decrypted = encryption.decrypt(encryptedToken)
+
+        // 복호화된 토큰을 Token 객체로 변환합니다.
+        // 만약 복호화된 토큰이 유효하지 않은 경우, INVALID 상태와 함께 null을 반환합니다.
+        val tokenBody = try {
+            Json.decodeFromString<Token>(decrypted)
+        } catch (e: Exception) {
+            return Pair(UserStatus.INVALID, null)
+        }
+
+        // 현재 시간을 밀리초 단위로 가져옵니다.
         val now = Calendar.getInstance().timeInMillis
+
+        // 토큰의 만료 시간이 현재 시간보다 이전인 경우, EXPIRED 상태와 함께 null을 반환합니다.
         if (tokenBody.expireTime <= now) return Pair(UserStatus.EXPIRED, null)
-        // if (tokenBody.issuedFor != host) return Pair(UserStatus.NOT_ALLOWED, null)
+
+        // 세션에서 토큰 본문에 해당하는 사용자를 가져옵니다.
+        // 해당 사용자가 없는 경우, INVALID 상태와 함께 null을 반환합니다.
         val user = sessions[tokenBody] ?: return Pair(UserStatus.INVALID, null)
+
+        // 만료된 토큰을 정리합니다.
         cleanExpiredToken()
+
+        // AUTHORIZED 상태와 사용자를 반환합니다.
         return Pair(UserStatus.AUTHORIZED, user)
     }
 

@@ -120,16 +120,16 @@ object PostDatabase {
      * @param imageKey 게시물의 이미지 키입니다. 이것은 게시물에 첨부된 이미지의 키를 나타냅니다.
      */
     fun postToDatabase(author: Int, content: String, image: InputStream) {
-        ImageStorage.uploadImage(author, image)
-        val connection = MySQL.getConnection()
-        val statement =
-            connection?.prepareStatement("INSERT INTO post (author, content, image, reg_date) VALUES (?, ?, ?, ?)")
-        statement?.setInt(1, author)
-        statement?.setString(2, content)
-        statement?.setString(3, imageKey)
-        statement?.setLong(4, System.currentTimeMillis())
-        statement?.executeUpdate()
-        statement?.close()
-        connection?.close()
+//        ImageStorage.uploadImage(author, image)
+//        val connection = MySQL.getConnection()
+//        val statement =
+//            connection?.prepareStatement("INSERT INTO post (author, content, image, reg_date) VALUES (?, ?, ?, ?)")
+//        statement?.setInt(1, author)
+//        statement?.setString(2, content)
+//        statement?.setString(3, imageKey)
+//        statement?.setLong(4, System.currentTimeMillis())
+//        statement?.executeUpdate()
+//        statement?.close()
+//        connection?.close()
     }
 }
