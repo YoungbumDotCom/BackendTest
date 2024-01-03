@@ -16,7 +16,7 @@ object ImageStorage {
         val path = "images/$newKey"
         saveKeyImagePathToDatabase(uploader, newKey, path)
         if (checkAndCreatePath(path)) {
-            Files.copy(base64ToInputStream(base64), Paths.get(path), StandardCopyOption.REPLACE_EXISTING)
+            Files.copy(base64.byteInputStream(), Paths.get(path), StandardCopyOption.REPLACE_EXISTING)
         }
         return newKey
     }

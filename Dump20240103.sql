@@ -113,6 +113,19 @@ CREATE TABLE `post`
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
+DROP TABLE IF EXISTS `image`;
+create table image
+(
+    `key` varchar(45) not null,
+    path  varchar(128) not null,
+    uploader int not null,
+    fileType varchar(45) not null,
+    constraint image_pk
+        primary key (`key`)
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 /*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS */;

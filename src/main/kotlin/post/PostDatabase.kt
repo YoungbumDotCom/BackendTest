@@ -56,8 +56,8 @@ object PostDatabase {
     fun getPostsByRange(start: Int, end: Int): List<Post> {
         val connection = MySQL.getConnection()
         val statement = connection?.prepareStatement("SELECT * FROM post ORDER BY reg_date DESC LIMIT ?, ?")
-        statement?.setInt(1, start - 1)
-        statement?.setInt(2, end - 1)
+        statement?.setInt(1, start)
+        statement?.setInt(2, end )
         val resultSet = statement?.executeQuery()
         val posts = mutableListOf<Post>()
         while (resultSet?.next() == true) {

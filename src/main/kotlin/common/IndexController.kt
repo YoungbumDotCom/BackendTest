@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import java.util.Base64
 
 /**
  * 이 클래스는 루트("/") 및 오류("/error") 경로에 대한 HTTP 요청을 처리합니다.
@@ -48,8 +49,8 @@ class IndexController : ErrorController {
 
     @GetMapping(value = ["/image/{key}"])
     fun getImage(@PathVariable key: String, response: HttpServletResponse) {
-        val image = ImageStorage.getImage(key)
-        image?.copyTo(response.outputStream)
+        val image = ImageStorage.getImage(key)?.bufferedReader()?.readText()?.split(",")?.get(1) ?: return
+        response.outputStream.write(Base64.getDecoder().decode(image))
     }
 
 }

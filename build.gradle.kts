@@ -22,6 +22,8 @@ dependencies {
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     implementation("mysql:mysql-connector-java:8.0.33")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-datetime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
