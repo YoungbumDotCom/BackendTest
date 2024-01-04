@@ -1,5 +1,6 @@
 package emiyaj.database
 
+import emiyaj.util.EnvVariable
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -16,14 +17,15 @@ object MySQL {
      */
     fun getConnection(): Connection? {
         // MySQL 드라이버를 초기화하고 연결을 반환합니다.
-        val url = "jdbc:mysql://10.0.2.3:33060/kmove" // 데이터베이스 URL
+        val url = "jdbc:mysql://${EnvVariable.getVariable("mysql.host")}:${EnvVariable.getVariable("mysql.port")}/${EnvVariable.getVariable("mysql.database")}" // 데이터베이스 URL
         val driver = "com.mysql.cj.jdbc.Driver" // JDBC 드라이버
-        val username = "kmove" // 데이터베이스 사용자 이름
-        val password = "Kmove12341234!" // 데이터베이스 비밀번호
+        val username = EnvVariable.getVariable("mysql.username") // 데이터베이스 사용자 이름
+        val password = EnvVariable.getVariable("mysql.password")//"Kmove12341234!" // 데이터베이스 비밀번호
         Class.forName(driver) // 드라이버 로드
         return try {
             DriverManager.getConnection(url, username, password) // 연결 시도
         } catch (e: Exception) {
+            e.printStackTrace()
             null // 연결 실패 시 null 반환
         }
     }
