@@ -47,6 +47,14 @@ class IndexController : ErrorController {
         return CommonResult(status = CommonStatus.NORMAL, comment = "normal")
     }
 
+    /**
+     * `@GetMapping` 어노테이션이 붙은 메서드로, 클라이언트로부터 GET 요청을 받아 처리합니다.
+     * 요청 경로는 "/image/{key}"입니다. 여기서 {key}는 이미지의 키를 나타냅니다.
+     *
+     * @param key 클라이언트로부터 받은 이미지의 키입니다.
+     * @param response 클라이언트에게 보낼 HTTP 응답 정보를 담고 있는 HttpServletResponse 객체입니다.
+     * 이 메서드는 이미지를 Base64로 디코딩하여 응답 본문에 쓰고, 클라이언트에게 이미지를 전송합니다.
+     */
     @GetMapping(value = ["/image/{key}"])
     fun getImage(@PathVariable key: String, response: HttpServletResponse) {
         val image = ImageStorage.getImage(key)?.bufferedReader()?.readText()?.split(",")?.get(1) ?: return

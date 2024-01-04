@@ -93,6 +93,13 @@ object UserSessionNew {
         }
     }
 
+    /**
+     * 주어진 암호화된 토큰을 사용하여 세션을 무효화하는 함수입니다.
+     * 이 함수는 AES 암호화를 사용하여 토큰을 복호화하고, 복호화된 토큰을 Token 객체로 변환합니다.
+     * 그런 다음, 세션에서 해당 토큰을 제거하여 세션을 무효화합니다.
+     *
+     * @param encryptedToken 세션을 무효화할 암호화된 토큰 문자열입니다.
+     */
     fun invalidate(encryptedToken: String) {
         val decrypted = encryption.decrypt(encryptedToken)
         val tokenBody = try {

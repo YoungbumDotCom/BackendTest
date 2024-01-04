@@ -9,6 +9,15 @@ import java.sql.Statement
 import java.sql.Timestamp
 
 object PostDatabase {
+    /**
+     * 이 함수는 ResultSet 객체를 Post 객체로 변환합니다.
+     * ResultSet 객체에서 "reg_date", "id", "member_id", "content", "image" 필드를 가져와 Post 객체를 생성합니다.
+     * "reg_date" 필드는 Timestamp 객체로 가져와 LocalDateTime 객체로 변환합니다.
+     * "image" 필드는 "image/" 문자열과 함께 Post 객체의 image 필드에 설정됩니다.
+     *
+     * @param resultSet Post 객체로 변환할 ResultSet 객체입니다.
+     * @return ResultSet 객체에서 가져온 정보를 사용하여 생성한 Post 객체를 반환합니다.
+     */
     private fun parseResultSetToPost(resultSet: ResultSet): Post {
         val regDate = resultSet.getTimestamp("reg_date").toLocalDateTime()
         return Post(
@@ -19,6 +28,7 @@ object PostDatabase {
             LocalDateTime(regDate.year, regDate.month, regDate.dayOfMonth, regDate.hour, regDate.minute, regDate.second)
         )
     }
+
     /**
      * 이 함수는 데이터베이스에서 주어진 개수만큼의 최신 게시물을 검색합니다.
      * MySQL 데이터베이스에 연결하고, 게시물의 개수를 사용하여 SELECT SQL 문을 준비합니다.
@@ -35,7 +45,7 @@ object PostDatabase {
         val resultSet = statement?.executeQuery()
         val posts = mutableListOf<Post>()
         while (resultSet?.next() == true) {
-           posts.add(parseResultSetToPost(resultSet))
+            posts.add(parseResultSetToPost(resultSet))
         }
         resultSet?.close()
         statement?.close()
@@ -57,7 +67,7 @@ object PostDatabase {
         val connection = MySQL.getConnection()
         val statement = connection?.prepareStatement("SELECT * FROM post ORDER BY reg_date DESC LIMIT ?, ?")
         statement?.setInt(1, start)
-        statement?.setInt(2, end )
+        statement?.setInt(2, end)
         val resultSet = statement?.executeQuery()
         val posts = mutableListOf<Post>()
         while (resultSet?.next() == true) {
@@ -110,7 +120,10 @@ object PostDatabase {
         val imageKey = ImageStorage.uploadImage(author, image)
         val connection = MySQL.getConnection()
         val statement =
-            connection?.prepareStatement("INSERT INTO post (member_id, content, image, reg_date) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)
+            connection?.prepareStatement(
+                "INSERT INTO post (member_id, content, image, reg_date) VALUES (?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
+            )
         statement?.setInt(1, author)
         statement?.setString(2, content)
         statement?.setString(3, imageKey)
