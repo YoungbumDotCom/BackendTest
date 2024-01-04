@@ -16,7 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor
  * @ControllerAdvice 어노테이션이 붙어 있어 Spring에서 자동으로 인식됩니다.
  * basePackageClasses 속성에 지정된 컨트롤러에 적용됩니다.
  */
-@ControllerAdvice(basePackageClasses = [PostController::class,  UserController::class])
+@ControllerAdvice(basePackageClasses = [PostController::class])
 class TokenValidationInterceptor : HandlerInterceptor {
 
     /**
@@ -37,7 +37,7 @@ class TokenValidationInterceptor : HandlerInterceptor {
         // 요청 메서드가 OPTIONS인 경우 true를 반환합니다.
         if (request.method.uppercase() == "OPTIONS") return true
         // 요청 헤더에서 토큰을 가져옵니다.
-        val token = request.getHeader("token")
+        val token = request.getHeader("Authorization")
         // 토큰이 null인 경우, INVALID 사용자 상태로 응답을 작성하고 false를 반환합니다.
         if (token == null) {
             response.writer.write(generateResponse(UserStatus.INVALID))

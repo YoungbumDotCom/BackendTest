@@ -29,7 +29,7 @@ open class WebConfig : WebMvcConfigurer {
      * @param registry 인터셉터 등록을 돕는 InterceptorRegistry의 인스턴스입니다.
      */
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(TokenValidationInterceptor()).excludePathPatterns("/post/get")
+        registry.addInterceptor(TokenValidationInterceptor()).addPathPatterns("/post/post", "/comment/**")
     }
 
     /**
